@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Website Title</title>
+    <link rel="stylesheet" href="/assets/fonts/fonts.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/icomoon/style.css">
+</head>
+<body>
+
+<header class="main-header-container">
+    <div class="main-header">
+        <div class="logo-container">
+            <img src="/assets/img/logo/main-logo.svg" alt="Website Logo" class="logo">
+        </div>
+
+        <div class="navigation-links-container">
+            <div class="search-container">
+                <button class="main-search-button nav-secondary-button" title="search" type="button"><span class="icon-search"></span></button>
+            </div>
+
+            <nav class="main-nav-link-container" itemscope itemtype="http://www.schema.org/SiteNavigationElement">
+                <ul class="nav-link-list">
+                    <li class="nav-link-item active" itemprop="name">
+                        <a href="/" class="nav-link-a nav-link-home" itemprop="url">
+                            Home
+                        </a>
+                    </li>
+                    <li class="nav-link-item" itemprop="name">
+                        <a href="/exams" class="nav-link-a nav-link-exam" itemprop="url">
+                            Exams
+                        </a>
+                    </li>
+                    <li class="nav-link-item" itemprop="name">
+                        <a href="/current" class="nav-link-a nav-link-current" itemprop="url">
+                            Current
+                        </a>
+                    </li>
+                    <li class="nav-link-item" itemprop="name">
+                        <a href="/articles" class="nav-link-a nav-link-article" itemprop="url">
+                            Articles
+                        </a>
+                    </li>
+                    <li class="nav-link-item" itemprop="name">
+                        <a href="/tools" class="nav-link-a nav-link-tools" itemprop="url">
+                            Tools
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="nav-settings-container">
+                <button id="theme-toggle-light" class="nav-secondary-button theme-toggle" aria-label="Toggle Dark Mode">
+                    <span class="icon-moon" aria-hidden="true"></span>
+                </button>
+                <button id="theme-toggle-dark" class="nav-secondary-button theme-toggle hidden" aria-label="Toggle Light Mode">
+                    <span class="icon-sun" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Main content area -->
+<main>
+    <!-- Your main content goes here -->
+</main>
+
+<script>
+    // Theme toggle functionality
+    const themeToggleLight = document.getElementById('theme-toggle-light');
+    const themeToggleDark = document.getElementById('theme-toggle-dark');
+    const isDarkMode = localStorage.getItem('dark-mode') === 'true';
+
+    // Function to set the theme (dark or light)
+    function setTheme(darkMode) {
+        if (darkMode) {
+            document.documentElement.classList.add('dark-mode');
+            themeToggleLight.classList.add('hidden');
+            themeToggleDark.classList.remove('hidden');
+        } else {
+            document.documentElement.classList.remove('dark-mode');
+            themeToggleLight.classList.remove('hidden');
+            themeToggleDark.classList.add('hidden');
+        }
+    }
+
+    // Set initial theme based on localStorage
+    setTheme(isDarkMode);
+
+    // Event listener for light theme toggle button
+    themeToggleLight.addEventListener('click', () => {
+        localStorage.setItem('dark-mode', 'true');
+        setTheme(true);
+    });
+
+    // Event listener for dark theme toggle button
+    themeToggleDark.addEventListener('click', () => {
+        localStorage.setItem('dark-mode', 'false');
+        setTheme(false);
+    });
+</script>
+
+</body>
+</html>
