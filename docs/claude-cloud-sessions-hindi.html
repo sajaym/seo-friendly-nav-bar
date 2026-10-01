@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude Cloud Sessions समझें</title>
+<style>
+  @page { size: A4; margin: 18mm 16mm; }
+  :root { --ink:#1f2328; --muted:#57606a; --accent:#7c3aed; --soft:#f3f0ff; --line:#d8d3e8; }
+  body { font-family: "Noto Sans Devanagari", "Noto Sans", Arial, sans-serif; color:var(--ink); background:#fff; line-height:1.7; max-width:820px; margin:0 auto; padding:0 16px; font-size:15px; }
+  h1 { font-size:28px; color:var(--accent); margin:0 0 4px; }
+  h2 { font-size:20px; margin:28px 0 8px; border-bottom:2px solid var(--line); padding-bottom:4px; }
+  .sub { color:var(--muted); margin-bottom:20px; }
+  .box { background:var(--soft); border:1px solid var(--line); border-radius:8px; padding:12px 16px; margin:12px 0; }
+  .flow { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:12px 0; }
+  .step { background:#fff; border:2px solid var(--accent); border-radius:8px; padding:8px 12px; font-weight:600; }
+  .arrow { color:var(--accent); font-size:22px; }
+  table { border-collapse:collapse; width:100%; margin:10px 0; }
+  th, td { border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top; }
+  th { background:var(--soft); }
+  code { background:#eef0f3; padding:1px 5px; border-radius:4px; font-size:13px; }
+  ul { padding-left:22px; } li { margin:4px 0; }
+  .tip { border-left:4px solid var(--accent); padding-left:12px; margin:12px 0; }
+  .pb { page-break-before: always; }
+</style>
+</head>
+<body>
+
+<h1>Claude Cloud Sessions क्या हैं?</h1>
+<p class="sub">एकदम आसान हिंदी में, नए लोगों के लिए</p>
+
+<h2>1. एक लाइन में</h2>
+<div class="box">
+<b>Claude Cloud Session</b> = इंटरनेट पर चलने वाला एक <b>अलग कंप्यूटर (container)</b>, जिसमें आपका GitHub वाला कोड डाउनलोड होता है, और Claude उसमें बैठकर आपके लिए कोड लिखता, चलाता और टेस्ट करता है। आपके अपने लैपटॉप पर कुछ भी इंस्टॉल करने की ज़रूरत नहीं।
+</div>
+
+<h2>2. यह कैसे काम करता है (पूरा सफ़र)</h2>
+<div class="flow">
+  <span class="step">आपका कोड GitHub पर</span><span class="arrow">→</span>
+  <span class="step">आप claude.ai/code पर session शुरू करते हैं</span><span class="arrow">→</span>
+  <span class="step">Cloud में नया कंप्यूटर बनता है, कोड उसमें clone होता है</span><span class="arrow">→</span>
+  <span class="step">आप हिंदी/English में बताते हैं क्या चाहिए</span><span class="arrow">→</span>
+  <span class="step">Claude कोड लिखता है, commit करता है, GitHub पर push करता है</span><span class="arrow">→</span>
+  <span class="step">आप अपने लैपटॉप पर pull करके देखते हैं</span>
+</div>
+
+<h2>3. ज़रूरी शब्द</h2>
+<table>
+<tr><th>शब्द</th><th>मतलब (आसान भाषा)</th></tr>
+<tr><td><b>Session</b></td><td>Claude के साथ एक काम की बातचीत। हर session को अपना cloud कंप्यूटर मिलता है।</td></tr>
+<tr><td><b>Container</b></td><td>वह अस्थायी (temporary) cloud कंप्यूटर। काम खत्म होने पर या कुछ देर बेकार रहने पर यह मिट जाता है। इसलिए जो भी काम बचाना है, उसे GitHub पर push करना ज़रूरी है।</td></tr>
+<tr><td><b>Environment</b></td><td>Container की सेटिंग: कौन-सी वेबसाइटें खुल सकती हैं, कौन-से टूल इंस्टॉल होंगे, कौन-से secret keys मिलेंगे।</td></tr>
+<tr><td><b>Branch</b></td><td>कोड की एक अलग "कॉपी-लाइन"। Claude आमतौर पर <code>claude/...</code> नाम की branch पर काम करता है ताकि आपका main कोड सुरक्षित रहे।</td></tr>
+<tr><td><b>Push</b></td><td>Cloud से बदलाव GitHub पर भेजना।</td></tr>
+<tr><td><b>Pull</b></td><td>GitHub से बदलाव अपने लैपटॉप पर लाना।</td></tr>
+<tr><td><b>Pull Request (PR)</b></td><td>"मेरी branch के बदलाव main में मिला दो" वाली request। आप GitHub पर देखकर merge कर सकते हैं।</td></tr>
+</table>
+
+<h2>4. Cloud session में Claude क्या-क्या कर सकता है?</h2>
+<ul>
+  <li>फ़ाइलें पढ़ना, बनाना, बदलना</li>
+  <li>Terminal commands चलाना (npm, python, tests वगैरह)</li>
+  <li>Browser खोलकर वेबसाइट/एप का screenshot लेना</li>
+  <li>Git commit और push करना</li>
+  <li>GitHub पर PR बनाना, CI की गलतियाँ ठीक करना</li>
+</ul>
+
+<h2>5. क्या नहीं कर सकता?</h2>
+<ul>
+  <li>आपके <b>लैपटॉप</b> की फ़ाइलों को सीधे नहीं छू सकता। आपके लैपटॉप तक कोड सिर्फ GitHub के रास्ते आता है।</li>
+  <li>Container मिटने के बाद उसमें रखी बिना-push की चीज़ें वापस नहीं आतीं।</li>
+  <li>Environment की network policy जिन वेबसाइटों को रोकती है, उन्हें नहीं खोल सकता।</li>
+</ul>
+
+<div class="pb"></div>
+
+<h2>6. $100 क्रेडिट कैसे समझदारी से इस्तेमाल करें</h2>
+<div class="tip">
+<ul>
+  <li><b>एक session = एक साफ़ काम।</b> जैसे "navbar को mobile-friendly बनाओ"। बहुत छोटे-छोटे सवाल लैपटॉप पर खुद ही कर लें।</li>
+  <li><b>साफ़ बताएँ क्या चाहिए।</b> जितना साफ़ बताएँगे, उतने कम round लगेंगे, उतने कम credits खर्च।</li>
+  <li><b>Session खत्म होने पर push ज़रूर हो।</b> हमेशा पूछें: "commit करके push कर दो"।</li>
+  <li>PR बनवाना है तो साफ़ कहें "PR बना दो", वरना Claude सिर्फ branch push करता है।</li>
+  <li>बड़े repo में बार-बार पूरा कोड पढ़वाना महँगा है, इसलिए फ़ाइल का नाम बताकर पूछें।</li>
+</ul>
+</div>
+
+<h2>7. पहली बार शुरू करने के steps</h2>
+<ol>
+  <li>GitHub अकाउंट बनाएँ और अपना code एक repository में डालें (HTML गाइड में पूरा तरीका है)।</li>
+  <li><b>claude.ai/code</b> खोलें, GitHub connect करें, repository को allow करें।</li>
+  <li>"New session" दबाएँ, repository चुनें, और अपना काम लिखें। जैसे: <br>
+      <code>index.html में navbar को mobile पर hamburger menu बना दो, फिर commit करके push करो</code></li>
+  <li>Claude काम खत्म करे तो branch का नाम नोट करें (जैसे <code>claude/amazing-franklin-607q2j</code>)।</li>
+  <li>लैपटॉप पर: <code>git fetch origin</code> फिर <code>git checkout claude/amazing-franklin-607q2j</code> और फ़ाइल खोलकर देखें।</li>
+  <li>पसंद आए तो GitHub पर PR खोलकर main में merge करें।</li>
+</ol>
+
+<h2>8. Local vs Cloud: कब क्या?</h2>
+<table>
+<tr><th>काम</th><th>कहाँ करें</th></tr>
+<tr><td>छोटी edit, color बदलना, text बदलना</td><td>लैपटॉप पर खुद (VS Code)</td></tr>
+<tr><td>नया feature, bug ढूँढना, tests लिखना</td><td>Claude cloud session</td></tr>
+<tr><td>कोड चलाकर अपनी आँख से देखना</td><td>लैपटॉप (pull करके)</td></tr>
+<tr><td>GitHub पर PR, CI ठीक करना</td><td>Claude cloud session</td></tr>
+</table>
+
+<p class="sub" style="margin-top:28px">आगे पढ़ें: <b>git-github-guide-hindi.html</b> में शुरू से आख़िर तक का पूरा सफ़र, हर command के साथ।</p>
+
+</body>
+</html>

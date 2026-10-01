@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Git, GitHub और Claude: पूरा सफ़र</title>
+<style>
+  :root { --ink:#1f2328; --muted:#57606a; --accent:#0969da; --soft:#eef5ff; --line:#d0d7de; --ok:#1a7f37; }
+  * { box-sizing:border-box; }
+  body { font-family: "Noto Sans Devanagari", "Noto Sans", Arial, sans-serif; color:var(--ink); background:#fff; line-height:1.75; max-width:860px; margin:0 auto; padding:24px 16px 60px; font-size:16px; }
+  h1 { font-size:30px; color:var(--accent); margin:0 0 4px; }
+  h2 { font-size:22px; margin:36px 0 10px; border-bottom:2px solid var(--line); padding-bottom:6px; }
+  h3 { font-size:17px; margin:20px 0 6px; }
+  .sub { color:var(--muted); margin-bottom:20px; }
+  .box { background:var(--soft); border:1px solid var(--line); border-radius:8px; padding:12px 16px; margin:12px 0; }
+  .warn { background:#fff8e6; border:1px solid #f0d58c; border-radius:8px; padding:12px 16px; margin:12px 0; }
+  pre { background:#0d1117; color:#e6edf3; padding:12px 14px; border-radius:8px; overflow-x:auto; font-size:14px; line-height:1.5; }
+  pre .c { color:#8b949e; }
+  code { background:#eef0f3; padding:1px 5px; border-radius:4px; font-size:14px; }
+  pre code { background:none; padding:0; color:inherit; }
+  table { border-collapse:collapse; width:100%; margin:10px 0; }
+  th, td { border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top; }
+  th { background:var(--soft); }
+  ol, ul { padding-left:24px; } li { margin:5px 0; }
+  nav { background:var(--soft); border-radius:8px; padding:12px 18px; margin:16px 0 28px; }
+  nav a { display:block; color:var(--accent); text-decoration:none; margin:3px 0; }
+  .map { display:grid; grid-template-columns:1fr; gap:6px; margin:12px 0; }
+  .node { border:2px solid var(--accent); border-radius:8px; padding:8px 12px; background:#fff; }
+  .node b { color:var(--accent); }
+  .down { text-align:center; color:var(--accent); font-size:20px; line-height:1; }
+</style>
+</head>
+<body>
+
+<h1>Git, GitHub और Claude Cloud Sessions</h1>
+<p class="sub">बिल्कुल नए लोगों के लिए, शुरू से आख़िर तक, हर command के साथ</p>
+
+<nav>
+  <a href="#s0">0. पूरी तस्वीर एक नज़र में</a>
+  <a href="#s1">1. एक बार की तैयारी (install और account)</a>
+  <a href="#s2">2. लैपटॉप पर folder बनाना और git शुरू करना</a>
+  <a href="#s3">3. GitHub पर repository बनाना और कोड डालना</a>
+  <a href="#s4">4. Claude cloud session से कोड लिखवाना</a>
+  <a href="#s5">5. Claude का कोड लैपटॉप पर लाना और चलाना</a>
+  <a href="#s6">6. लैपटॉप पर खुद edit करके फिर GitHub पर डालना</a>
+  <a href="#s7">7. फिर से Claude को देना (चक्र दोहराना)</a>
+  <a href="#s8">8. Branch और PR: main में मिलाना</a>
+  <a href="#s9">9. रोज़ की cheat-sheet</a>
+  <a href="#s10">10. आम गलतियाँ और उनका इलाज</a>
+</nav>
+
+<h2 id="s0">0. पूरी तस्वीर एक नज़र में</h2>
+<div class="box">
+तीन जगहें हैं। हर जगह कोड की एक कॉपी रहती है:
+<ol>
+  <li><b>आपका लैपटॉप</b> (local)</li>
+  <li><b>GitHub</b> (इंटरनेट पर आपकी repository, यह "बीच का डाकघर" है)</li>
+  <li><b>Claude का cloud कंप्यूटर</b> (session के दौरान)</li>
+</ol>
+लैपटॉप और Claude कभी सीधे बात नहीं करते। दोनों GitHub के ज़रिये कोड भेजते और लेते हैं।
+</div>
+<div class="map">
+  <div class="node"><b>लैपटॉप</b>: folder बनाया, कोड लिखा</div>
+  <div class="down">↓ git push</div>
+  <div class="node"><b>GitHub</b>: repository में कोड पहुँचा</div>
+  <div class="down">↓ session शुरू (clone अपने आप)</div>
+  <div class="node"><b>Claude cloud</b>: कोड लिखा, commit, push</div>
+  <div class="down">↓ git pull / checkout</div>
+  <div class="node"><b>लैपटॉप</b>: चलाकर देखा, edit किया</div>
+  <div class="down">↓ git push … और यही चक्र चलता रहता है</div>
+</div>
+
+<h2 id="s1">1. एक बार की तैयारी</h2>
+<h3>1.1 Install करें</h3>
+<ul>
+  <li><b>Git</b>: <a href="https://git-scm.com/downloads">git-scm.com/downloads</a> से। Windows पर "Git Bash" भी साथ आता है।</li>
+  <li><b>VS Code</b>: <a href="https://code.visualstudio.com">code.visualstudio.com</a> से। इसमें built-in terminal है।</li>
+  <li><b>GitHub account</b>: <a href="https://github.com">github.com</a> पर Sign up।</li>
+</ul>
+<h3>1.2 Git को अपना नाम बताएँ (सिर्फ एक बार)</h3>
+<pre><code>git config --global user.name "Apna Naam"
+git config --global user.email "apna@email.com"</code></pre>
+<h3>1.3 GitHub से login (सिर्फ एक बार)</h3>
+<p>सबसे आसान तरीका GitHub CLI है:</p>
+<pre><code>winget install GitHub.cli      <span class="c"># Windows</span>
+brew install gh                <span class="c"># Mac</span>
+gh auth login                  <span class="c"># फिर browser में login कर दें</span></code></pre>
+<p>इसके बाद push/pull पर password नहीं माँगेगा।</p>
+
+<h2 id="s2">2. लैपटॉप पर folder बनाना और git शुरू करना</h2>
+<pre><code><span class="c"># 1. folder बनाएँ और उसमें जाएँ</span>
+mkdir mera-project
+cd mera-project
+
+<span class="c"># 2. इस folder को git से "देखना" शुरू करवाएँ</span>
+git init
+
+<span class="c"># 3. कोई फ़ाइल बनाएँ (VS Code में या command से)</span>
+echo "&lt;h1&gt;Namaste&lt;/h1&gt;" &gt; index.html
+
+<span class="c"># 4. git को बताएँ कौन-सी फ़ाइलें save करनी हैं</span>
+git add .
+
+<span class="c"># 5. एक "save point" (commit) बनाएँ</span>
+git commit -m "pehla commit"</code></pre>
+<div class="box">
+<b>समझें:</b> <code>git add</code> = "इन फ़ाइलों को अगले save में शामिल करो"। <code>git commit</code> = "save point बनाओ, नाम के साथ"। Commit सिर्फ लैपटॉप पर होता है, GitHub पर अभी कुछ नहीं गया।
+</div>
+
+<h2 id="s3">3. GitHub पर repository बनाना और कोड डालना</h2>
+<h3>तरीका A: gh से (सबसे आसान)</h3>
+<pre><code>gh repo create mera-project --public --source=. --push</code></pre>
+<p>बस। Repository बन गई और कोड ऊपर चला गया।</p>
+<h3>तरीका B: website से</h3>
+<ol>
+  <li>github.com पर <b>+</b> → <b>New repository</b> → नाम <code>mera-project</code> → Create।</li>
+  <li>फिर terminal में:</li>
+</ol>
+<pre><code>git branch -M main
+git remote add origin https://github.com/APKA-USERNAME/mera-project.git
+git push -u origin main</code></pre>
+<div class="box"><b>remote</b> = GitHub वाली कॉपी का पता। <code>origin</code> उसका nickname है। <code>push</code> = लैपटॉप से GitHub पर भेजो।</div>
+
+<h2 id="s4">4. Claude cloud session से कोड लिखवाना</h2>
+<ol>
+  <li><a href="https://claude.ai/code">claude.ai/code</a> खोलें। GitHub connect करें और अपनी repository को allow करें।</li>
+  <li><b>New session</b> → repository चुनें <code>mera-project</code>।</li>
+  <li>साफ़-साफ़ काम लिखें। उदाहरण:</li>
+</ol>
+<div class="box">
+"index.html में एक responsive navbar बनाओ जिसमें Home, About, Contact links हों। Mobile पर hamburger menu हो। CSS को style.css में रखो। काम होने पर commit करके push कर दो।"
+</div>
+<ol start="4">
+  <li>Claude काम करेगा और एक <b>branch</b> पर push करेगा, जैसे <code>claude/amazing-franklin-607q2j</code>। यह नाम session के आख़िर में बताया जाता है। नोट कर लें।</li>
+</ol>
+<div class="warn"><b>याद रखें:</b> Claude आपके <code>main</code> को सीधे नहीं बदलता। वह अलग branch पर काम करता है, ताकि आप पहले देख लें, फिर मिलाएँ।</div>
+
+<h2 id="s5">5. Claude का कोड लैपटॉप पर लाना और चलाना</h2>
+<pre><code>cd mera-project
+
+<span class="c"># GitHub से नई branches की जानकारी लाओ</span>
+git fetch origin
+
+<span class="c"># Claude वाली branch पर जाओ (नाम अपना वाला डालें)</span>
+git checkout claude/amazing-franklin-607q2j</code></pre>
+<p>अब VS Code में फ़ाइलें देखें। HTML project है तो <code>index.html</code> पर double-click करके browser में खोलें, या VS Code का "Live Server" extension लगाएँ।</p>
+<p>Node/Python project हो तो वही चलाएँ जो README में लिखा हो, जैसे <code>npm install</code> और <code>npm run dev</code>।</p>
+<div class="box"><code>fetch</code> = सिर्फ जानकारी लाओ। <code>checkout</code> = उस branch की फ़ाइलें folder में दिखाओ। <code>pull</code> = fetch + अभी वाली branch में मिलाओ।</div>
+
+<h2 id="s6">6. लैपटॉप पर खुद edit करके फिर GitHub पर डालना</h2>
+<p>मान लीजिए आप उसी branch पर हैं और आपने रंग बदला। अब:</p>
+<pre><code>git status                      <span class="c"># क्या-क्या बदला, देख लो</span>
+git add .
+git commit -m "navbar ka color badla"
+git push</code></pre>
+<p>पहली बार किसी नई branch पर push करना हो तो:</p>
+<pre><code>git push -u origin BRANCH-KA-NAAM</code></pre>
+
+<h2 id="s7">7. फिर से Claude को देना (चक्र दोहराना)</h2>
+<p>आपका push GitHub पर पहुँच गया। अब फिर से claude.ai/code पर जाएँ, वही session खोलें (या नया बनाएँ) और कहें:</p>
+<div class="box">"मैंने branch <code>claude/amazing-franklin-607q2j</code> पर color बदला है। उसे pull करो, फिर navbar में एक search box जोड़ो, और push कर दो।"</div>
+<p>Claude cloud में <code>git pull</code> करके आपका बदलाव ले लेगा, काम करेगा, push करेगा। आप फिर step 5 दोहराएँ: <code>git pull</code>।</p>
+<div class="warn"><b>सुनहरा नियम:</b> किसी भी तरफ़ काम शुरू करने से पहले <code>git pull</code>, और काम खत्म होने पर <code>git push</code>। इससे दोनों तरफ़ की कॉपी एक जैसी रहती है और टकराव (conflict) नहीं होता।</div>
+
+<h2 id="s8">8. Branch और PR: main में मिलाना</h2>
+<p>जब Claude वाली branch का काम पसंद आ जाए, उसे <code>main</code> में मिलाना है। दो तरीके:</p>
+<h3>तरीका A: GitHub पर Pull Request (सलाह यही है)</h3>
+<ol>
+  <li>github.com पर repository खोलें। ऊपर पीला बैनर दिखेगा "Compare &amp; pull request" → दबाएँ।</li>
+  <li>Title लिखें, <b>Create pull request</b>।</li>
+  <li>"Files changed" tab में बदलाव देखें। ठीक लगे तो <b>Merge pull request</b> → <b>Confirm</b>।</li>
+</ol>
+<p>या Claude से ही कह दें: "इस branch का PR बना दो"।</p>
+<h3>तरीका B: terminal से</h3>
+<pre><code>git checkout main
+git pull
+git merge claude/amazing-franklin-607q2j
+git push</code></pre>
+<h3>Merge के बाद लैपटॉप को ताज़ा करें</h3>
+<pre><code>git checkout main
+git pull</code></pre>
+
+<h2 id="s9">9. रोज़ की cheat-sheet</h2>
+<table>
+<tr><th>काम</th><th>Command</th></tr>
+<tr><td>क्या बदला है देखना</td><td><code>git status</code></td></tr>
+<tr><td>सब फ़ाइलें save के लिए चुनना</td><td><code>git add .</code></td></tr>
+<tr><td>Save point बनाना</td><td><code>git commit -m "message"</code></td></tr>
+<tr><td>GitHub पर भेजना</td><td><code>git push</code></td></tr>
+<tr><td>GitHub से लाना</td><td><code>git pull</code></td></tr>
+<tr><td>सारी branches देखना</td><td><code>git branch -a</code></td></tr>
+<tr><td>किसी branch पर जाना</td><td><code>git checkout NAAM</code></td></tr>
+<tr><td>नई branch बनाकर उस पर जाना</td><td><code>git checkout -b NAAM</code></td></tr>
+<tr><td>पुराने commits देखना</td><td><code>git log --oneline</code></td></tr>
+<tr><td>किसी फ़ाइल का बदलाव वापस लेना (commit से पहले)</td><td><code>git checkout -- file.html</code></td></tr>
+<tr><td>GitHub से पूरा project नए लैपटॉप पर लाना</td><td><code>git clone https://github.com/USER/REPO.git</code></td></tr>
+</table>
+
+<h2 id="s10">10. आम गलतियाँ और उनका इलाज</h2>
+<table>
+<tr><th>दिक्कत</th><th>क्या करें</th></tr>
+<tr><td><code>push</code> पर "rejected" आता है</td><td>पहले <code>git pull</code> करें, फिर <code>git push</code>। मतलब GitHub पर कुछ नया है जो आपके पास नहीं था।</td></tr>
+<tr><td>"CONFLICT" लिखा आ गया</td><td>फ़ाइल खोलें, <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code> और <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code> के बीच दोनों versions दिखेंगे। जो रखना है रखें, बाकी मिटाएँ, फिर <code>git add .</code> और <code>git commit</code>। या Claude से कहें "conflict resolve कर दो"।</td></tr>
+<tr><td>Claude वाली branch दिख ही नहीं रही</td><td><code>git fetch origin</code> चलाएँ, फिर <code>git branch -a</code>।</td></tr>
+<tr><td>गलती से main पर edit कर दिया</td><td><code>git stash</code> → <code>git checkout -b nayi-branch</code> → <code>git stash pop</code>। बदलाव नई branch पर आ जाएँगे।</td></tr>
+<tr><td>Claude session में काम हुआ पर push नहीं हुआ</td><td>Session मिटने से पहले कहें "अभी commit करके push करो"। Cloud container अस्थायी है।</td></tr>
+<tr><td>Password बार-बार माँगता है</td><td><code>gh auth login</code> एक बार कर लें।</td></tr>
+</table>
+
+<div class="box" style="margin-top:32px">
+<b>सबसे ज़रूरी बात:</b> कुछ बिगड़ता नहीं। Git हर commit याद रखता है, और GitHub पर कॉपी सुरक्षित रहती है। डरे बिना try करें। अटकें तो Claude session में पूरा error paste करके पूछ लें।
+</div>
+
+</body>
+</html>
